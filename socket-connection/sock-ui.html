@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+
+</head>
+<body>
+
+<!--<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>-->
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+<script>
+    $(function(){
+        var socket = io('http://localhost:8080');
+        console.log("Socket connected"+socket.connected)
+
+        socket.on('notification', function(value){
+            console.log("received from server "+value.message);
+            var notification = new Notification('New appointment', {
+                    body: "Hey Doctor! There's a new appointment!",
+                });
+        });
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "smart-recovery",
+  "version": "1.0.0",
+  "description": "Server that handles app and web-app responses",
+  "main": "server.js",
+  "private":true,
+  "dependencies": {
+    "express": "^4.15.2",
+    "mongodb": "^2.2.25"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aditya Hegde",
+  "license": "ISC"
+}

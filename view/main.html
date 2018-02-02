@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <script src="../scripts/jquery-3.1.0.min.js"></script>
+  <script src="../scripts/canvasjs.min.js"></script>
+  
+
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" 
+integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+<div class="col col-sm-2"> 
+</div>
+
+<div class="col col-sm-8">
+<br>
+<h1 font-size: 30px><center><b>Smart Recovery </b></center></h1>
+<br>
+<br>
+
+<div id="redraw">
+
+<div class="row justify-content-center">
+  <div class="col-xs-6 col-md-4">
+    <a href="profile.html" class="thumbnail">
+      <img src="../images/profile.png" onclick="trial.html" alt="...">
+    </a>
+  </div>
+    <div class="col-xs-6 col-md-4" >
+    <a href="dashboard.html" class="thumbnail">
+      <img src="../images/dashboard.png" alt="...">
+    </a>
+  </div>
+ 
+ </div>
+
+<div class="row justify-content-center">
+  <div class="col-xs-6 col-md-4">
+    <center><h4><b> Add Patient Profile </b></h4></center>
+	</div>
+	  <div class="col-xs-6 col-md-4" >
+     <center><h4><b>Patient's Dashboard</b></h4> </center>
+  
+  </div>
+  
+
+</div>
+</div> <!-- end of redraw -->
+
+<div class="col col-sm-2"> 
+</div>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+<!--<script src="http://localhost:3000/socket.io/socket.io.js"></script>-->
+<script>
+    $(function(){
+        var notified = false;
+        var socket = io('http://localhost:8080/');
+        /*Data format
+        * 7 value points - past 7 days
+        * Patient ID
+        * */
+        socket.on('notification', function(msg) {
+            console.log('main.html connected');
+
+            if (!notified) {
+            var notification = new Notification('New appointment', {
+                icon: '../images/notification.png',
+                body: "Hey Doctor! There's a new appointment!"
+            });
+
+            notification.onclick = function () {
+                window.open("dashboard.html");
+            }
+            notified = true;
+            } //if ends
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>

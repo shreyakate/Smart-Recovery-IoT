@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	
+		<script src="../scripts/jquery-3.1.0.min.js"></script>
+		<script src="../scripts/canvasjs.min.js"></script>
+		
+		<script
+		src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+		crossorigin="anonymous"></script> 
+		  
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script> -->
+
+		 <!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+		integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" 
+		integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		
+		<title>Vitals Monitoring Dashboard</title>
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="../scripts/bootstrap4-alpha3.min.css">
+ 
+		<style>
+			body {
+				background-color: #fafafa;
+				font-size: 16px;
+				line-height: 1.5;
+			}
+			
+			h1,h2,h3,h4,h5,h6 {
+				font-weight: 400;	
+			}
+			
+			#header {
+				
+				color: #000000;
+				margin-bottom: 0.5rem;
+				padding: 1.5rem 0;
+			}
+			
+			#revenue-tag {
+				font-weight: inherit !important;
+				border-radius: 0px !important;
+			}
+			
+			.card {
+				border: 0rem;
+				border-radius: 0rem;
+			}
+			
+			.card-header {
+				background-color: #a0f441;
+				border-radius: 0 !important;
+				color:	white;
+				margin-bottom: 0;
+				
+			}
+			
+			.card-block {
+				border: 1px solid #cccccc;	
+			}
+			
+			.shadow {
+				box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+										0 1px 18px 0 rgba(0, 0, 0, 0.12),
+										0 3px 5px -1px rgba(0, 0, 0, 0.2);
+			}
+			
+			#heart-rate-chart, #sleep-hour-chart {
+				height: 200px;
+				width: 100%;
+			}	
+			
+		</style>
+		
+		
+		<!-- Scripts -->
+
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+		<script>
+			$(function () {
+                var chartMeta = {
+                    animationEnabled: true,
+                    backgroundColor: "transparent",
+                    theme: "theme2",
+                    toolTip: {
+                        borderThickness: 0,
+                        cornerRadius: 0
+                    },
+                    axisX: {
+                        labelFontSize: 14,
+                        //maximum: new Date("31 Dec 2017"),
+                        valueFormatString: "DD/MM"
+                    },
+                    axisY: {
+                        minimum: 30,
+                        gridThickness: 0,
+                        labelFontSize: 14,
+                        lineThickness: 2
+                    },
+                    data: [
+						/*{
+						 type: "spline",
+						 dataPoints: [
+						 { x: new Date("7 Apr 2017"), y: day1 },
+						 { x: new Date("8 Apr 2017"), y: day2 },
+						 { x: new Date("9 Apr 2017"), y: day3 },
+						 { x: new Date("10 Apr 2017"), y: day4 },
+						 { x: new Date("11 Apr 2017"), y: day5 },
+						 { x: new Date("12 Apr 2017"), y: day6 },
+						 { x: new Date("13 Apr 2017"), y: day7 }
+						 ]
+						 }*/
+                    ]
+                };
+                var heartRateChart = new CanvasJS.Chart("heart-rate-chart", chartMeta);
+
+                heartRateChart.render();
+
+                var socket = io('http://localhost:8080/');
+				//get only 7 values from array
+				socket.on('notification',function(msg){
+
+                    /*var chart_data = [62.857142857142854, 49.857142857142854, 64.28571428571429, 67.85714285714286,
+                        51.142857142857146, 51.285714285714285, 54.714285714285715];*/
+
+                    var input = returnValues(msg);
+
+					console.log(input);
+                    var day1 = input[0];
+                    var day2 = input[1];
+                    var day3 = input[2];
+                    var day4 = input[3];
+                    var day5 = input[4];
+                    var day6 = input[5];
+                    var day7 = input[6];
+
+                    var data = [{
+                        type:"spline",
+                        dataPoints: [
+                            { x: new Date("8 Apr 2017"), y: day1 },
+                            { x: new Date("9 Apr 2017"), y: day2 },
+                            { x: new Date("10 Apr 2017"), y: day3 },
+                            { x: new Date("11 Apr 2017"), y: day4 },
+                            { x: new Date("12 Apr 2017"), y: day5 },
+                            { x: new Date("13 Apr 2017"), y: day6 },
+                            { x: new Date("14 Apr 2017"), y: day7 }
+
+                        ]}]; //data ends here
+					chartMeta.data = data;
+                    heartRateChart = new CanvasJS.Chart("heart-rate-chart", chartMeta);
+                    heartRateChart.render();
+
+                });
+			});
+			
+            function returnValues(msg){
+                var input = msg.data.vitals;
+				console.log("Length is "+input.length);
+
+                var length = Math.round(parseInt(input.length)/7.0);
+                console.log("Number of elements in each array "+length);
+                var result = [];
+                var sum = 0;
+
+                $.each(input, function( index, value ) {
+
+                    if((index+1)%parseInt(length) == 0){
+                        sum = ((sum).valueOf() + (value).valueOf()).valueOf();
+                        result.push((sum).valueOf()/length);
+                        sum = 0;
+                    }
+                    else {
+
+                        //sum = parseInt(sum) + parseInt(value.value);
+                        sum = (sum.valueOf() + (value).valueOf()).valueOf();
+                    }
+                });
+
+                return result;
+
+            }
+
+
+		</script>
+		
+	</head>
+	<body>
+		<div class="container" class="center-block">
+			<h2 id="header">
+				<strong>Vitals Monitoring Dashboard</strong>
+			</h2>
+			
+			<!--<form action="http://192.168.1.7:8080/" method="" enctype="application/x-www-form-urlencoded"> -->
+			<div class="col-lg-3"></div>
+			<div class="col-lg-6">
+			<!--<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon1">Patient ID</span>
+			<input type="number" class="form-control" name="_id" placeholder="Search data for Patient ID" aria-describedby="sizing-addon1">
+			<span class="input-group-btn"> 
+			<button class="btn btn-default" type="button">Go!</button> </span>
+			</div> -->
+			</div>
+			<div class="col-lg-3"></div>
+			</br>
+			</br>
+			<div class="row m-b-1">
+				<div class="col-lg-6">
+					<div class="card shadow">
+						<h4 class="card-header"><strong>Heart Rate</strong></h4>
+						<div class="card-block">
+							<div id="heart-rate-chart"></div>
+						</div>
+					</div>
+				</div>
+				<!--<div class="col-lg-6">
+					<div class="card shadow">
+						<h4 class="card-header"><strong>Sleep Hours</strong></h4>
+						<div class="card-block">
+							<div id="sleep-hour-chart"></div>
+						</div>
+					</div>
+				</div> -->
+				
+			</div> </center><!-- row -->
+
+			<!--<div class="row m-b-1">
+
+				<div class="col-lg-6">
+					<div class="card shadow">
+						<h4 class="card-header"><strong>Calories Burnt</strong></h4>
+						<div class="card-block">
+							<div id="heart-rate-chart"></div>
+						</div>
+					</div>
+				</div> 
+				
+				<div class="col-lg-6">
+					<div class="card shadow">
+						<h4 class="card-header"><strong>Blood Pressure</strong></h4>
+						<div class="card-block">
+							<div id="sleep-hour-chart"></div>
+						</div>
+					</div>
+				</div>
+				
+			</div> <!-- row -->
+
+			<!--<div class="row m-b-1">
+
+				<div class="col-lg-6">
+					<div class="card shadow">
+						<h4 class="card-header"><strong>Steps Count</strong></h4>
+						<div class="card-block">
+							<div id="heart-rate-chart"></div>
+						</div>
+					</div>
+				</div> 
+				
+				<div class="col-lg-6">
+					<div class="card shadow">
+						<h4 class="card-header"><strong>Weight</strong></h4>
+						<div class="card-block">
+							<div id="sleep-hour-chart"></div>
+						</div>
+					</div>
+				</div>
+				
+			</div> <!-- row -->
+		</div> <!-- container -->
+	</body>
+</html>
